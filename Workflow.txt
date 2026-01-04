@@ -1,0 +1,4 @@
+1. What the model predicts?
+Input - candidate profile (later a small audio file too)
+Output- Probability of interview success
+Type- Supervised classification
