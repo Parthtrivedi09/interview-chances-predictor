@@ -1,0 +1,30 @@
+1. Dealing with a real life data full of noices 
+    Even high cgpa candidates were not placed
+2. While final probability mapping first i selected gradient boosting as the final model but a lot of different problems arrived
+   -Mismatch between model goal and moodel behaviour
+    the output of 20% which seemed to be a  good candidate  made me rethink about what the real prooblem is
+    so basically it gave according to the data it was among top 80%
+    and also one more factor affecting was correlation of different parameters
+    WEAK CORRELATION OF INTERNSHIP (JUST 0.26)
+        even if 2 internships-> noo guaranteed success
+        NOISY DATA(SURPRIS)
+        🔴 1. Gradient Boosting outputs are NOT calibrated
+        🔴 2. Dataset has weak separability
+        🔴 3. Features are moderately predictive, not decisive
+        🔴 4. Real-world noise → model becomes conservative
+
+Solutions -> 1. calibrate gradient boosting
+             2. Switching to logistic regression
+
+             ADVANTAGE OF SOLUTION 1-> Gradient boosting helps you capture non linearity which is not that well captured in logiistic regression
+             ADVANTAGE OF SOLUTION 2-> PProbability mappiing is naturally good as well as overfitting risk is low
+        
+        FINALLY I switched to logistic regression
+            What matters MORE?
+            Accurate ranking? ❌
+
+            Interpretable probability? ✅
+
+“Although Gradient Boosting gave better ROC-AUC, its probability estimates were not well calibrated.
+ Since my system is user-facing and requires meaningful probability outputs, I switched to Logistic
+ Regression, which provides more reliable probability estimates.”
