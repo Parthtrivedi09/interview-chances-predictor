@@ -1,0 +1,12 @@
+Audio → Speech-to-Text → Text Analysis → Feature Extraction → Voice Score → Model Input
+
+1. We are doing:
+    Communication Quality Estimation
+2. WHY Whisper?
+    High accuracy
+    Works offline
+    Industry-level model
+3. TEXT → FEATURES
+4. FEATURES → VOICE SCORE
+5. NORMALIZE (0-5)
+6. Add this normalized score as soft skill rating

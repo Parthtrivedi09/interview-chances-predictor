@@ -1,6 +1,13 @@
+import os
+
+# ✅ Ensure ffmpeg is available (for Whisper)
+os.environ["PATH"] += os.pathsep + r"C:\ffmpeg\bin"
 
 import joblib
 import numpy as np
+import pandas as pd
+from voice_pipeline import get_soft_skill_score
+
 
 # Load everything
 data = joblib.load("log_reg.pkl") #load the logistic regression model
@@ -10,14 +17,13 @@ scaler = data["scaler"]
 features = data["features"]
 
 def predict(input_dict):
-    # Ensure correct order
-    input_data = [input_dict[feature] for feature in features]
+    import pandas as pd
 
-    input_array = np.array(input_data).reshape(1, -1)
+    # Ensure correct order (CRITICAL FIX)
+    input_df = pd.DataFrame([input_dict])[features]
 
     # Scale
-
-    input_scaled = scaler.transform(input_array)
+    input_scaled = scaler.transform(input_df)
 
     # Predict probability
     prob = model.predict_proba(input_scaled)[0][1]
@@ -58,7 +64,7 @@ def generate_feedback(input_dict):
         weaknesses.append("Weak aptitude skills")
 
     # --- Soft Skills ---
-    if input_dict["SoftSkillsRating"] >= 4.2:
+    if input_dict["SoftSkillsRating"] >= 4.0:
         strengths.append("Good communication and soft skills")
     else:
         weaknesses.append("Needs improvement in communication skills")
@@ -84,12 +90,36 @@ def generate_feedback(input_dict):
     return strengths, weaknesses
 
 
+# ===============================
+# 🎤 AUDIO INPUT (IMPROVED)
+# ===============================
+
+audio_path = r"C:\Users\Parth Trivedi\Desktop\CODING\MachineLearning\interview-chances-predictor\parth_audio_sample.m4a"
+
+# ✅ Check file exists (prevents crash)
+print("Audio exists:", os.path.exists(audio_path))
+if not os.path.exists(audio_path):
+    raise FileNotFoundError("Audio file not found. Check path.")
+
+# ✅ Generate voice score safely (fallback added)
+try:
+    voice_score = get_soft_skill_score(audio_path)
+    print(f"🎤 Voice Score (0–5): {round(voice_score,2)}")
+except Exception as e:
+    print("Voice processing failed:", e)
+    voice_score = 2.5  # fallback neutral score
+
+
+# ===============================
+# 📊 MODEL INPUT
+# ===============================
+
 sample = {
     "CGPA": 9.4,
     "Internships": 0,
     "Projects": 2,
     "AptitudeTestScore": 85,
-    "SoftSkillsRating": 4.3,
+    "SoftSkillsRating": voice_score,
     "ExtracurricularActivities": 1,
     "Workshops/Certifications": 0,
     "PlacementTraining": 1
@@ -98,7 +128,7 @@ sample = {
 prob = predict(sample)
 strengths, weaknesses = generate_feedback(sample)
 
-print(f"Chance: {round(prob*100,2)}%")
+print(f"\nChance: {round(prob*100,2)}%")
 print("Strengths:", strengths)
 print("Weaknesses:", weaknesses)
 
