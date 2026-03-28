@@ -96,7 +96,7 @@ def extract_voice_features(text, duration):
 # FEATURES → SCORE (STRICT + REALISTIC)
 # ================================
 def compute_voice_score(features):
-    score = 4.5  # start slightly below perfect (real-world assumption)
+    score = 4.8  # start slightly below perfect (real-world assumption)
 
     # ---------------------------
     # FLUENCY

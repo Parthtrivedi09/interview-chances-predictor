@@ -27,4 +27,13 @@ Solutions -> 1. calibrate gradient boosting
 
 “Although Gradient Boosting gave better ROC-AUC, its probability estimates were not well calibrated.
  Since my system is user-facing and requires meaningful probability outputs, I switched to Logistic
- Regression, which provides more reliable probability estimates.”
+ Regression, which provides more reliable probability estimates.”'
+
+
+
+
+ so another problem which i faced is while working with nlp model as i wanted to design it with handheld features so scoring it and making it 
+ in accordance with the voice score data i used to train the model was a tough job
+ so initially i started the sddcore with 0 and slowly increased the score according to the voice features but that was not sufficient 
+ so insteaad i started with perfect score of 5 and started penalizing it on the basis of the negatives such as fillers pauses repeatation etc
+ 
