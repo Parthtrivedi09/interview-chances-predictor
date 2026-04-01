@@ -1,84 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Interview Predictor</title>
+<meta charset="UTF-8">
+<title>Interview Chance Predictor</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
-            text-align: center;
-            padding: 40px;
-        }
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
 
-        h1 {
-            margin-bottom: 20px;
-        }
+h1 {
+    margin-bottom: 20px;
+}
 
-        form {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-        }
+.card {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 12px;
+    display: inline-block;
+    width: 350px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
 
-        input {
-            margin: 8px;
-            padding: 10px;
-            width: 220px;
-            border-radius: 5px;
-            border: none;
-        }
+input {
+    margin: 8px 0;
+    padding: 10px;
+    width: 90%;
+    border-radius: 6px;
+    border: none;
+}
 
-        button {
-            padding: 10px 20px;
-            background: #22c55e;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+button {
+    margin-top: 10px;
+    padding: 12px 20px;
+    background: #22c55e;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    width: 100%;
+}
 
-        button:hover {
-            background: #16a34a;
-        }
+button:hover {
+    background: #16a34a;
+}
 
-        #result {
-            margin-top: 25px;
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            width: 60%;
-            text-align: left;
-        }
+#result {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #1e293b;
+    display: none;
+}
 
-        ul {
-            margin-top: 5px;
-        }
-    </style>
+.progress-bar {
+    width: 100%;
+    background: #334155;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-fill {
+    height: 20px;
+    background: #22c55e;
+    width: 0%;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.strength {
+    background: #16a34a;
+}
+
+.weakness {
+    background: #dc2626;
+}
+
+.loader {
+    border: 4px solid #334155;
+    border-top: 4px solid #22c55e;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 15px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 </head>
 
 <body>
 
 <h1>🎯 Interview Chance Predictor</h1>
 
+<div class="card">
 <form id="form">
-    <input type="file" name="file" required><br>
+    <input type="file" name="file" required>
 
-    <input type="number" step="0.01" name="cgpa" placeholder="CGPA" required><br>
-    <input type="number" name="internships" placeholder="Internships" required><br>
-    <input type="number" name="projects" placeholder="Projects" required><br>
-    <input type="number" name="aptitude" placeholder="Aptitude Score" required><br>
-    <input type="number" name="extracurricular" placeholder="Extracurricular (0/1)" required><br>
-    <input type="number" name="workshops" placeholder="Workshops" required><br>
-    <input type="number" name="placement_training" placeholder="Placement Training (0/1)" required><br>
+    <input type="number" step="0.01" name="cgpa" placeholder="CGPA" required>
+    <input type="number" name="internships" placeholder="Internships" required>
+    <input type="number" name="projects" placeholder="Projects" required>
+    <input type="number" name="aptitude" placeholder="Aptitude Score" required>
+    <input type="number" name="extracurricular" placeholder="Extracurricular (0/1)" required>
+    <input type="number" name="workshops" placeholder="Workshops" required>
+    <input type="number" name="placement_training" placeholder="Placement Training (0/1)" required>
 
-    <br>
     <button type="submit">Predict</button>
 </form>
+</div>
 
 <div id="result"></div>
 
@@ -87,7 +135,8 @@ document.getElementById("form").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "⏳ Processing...";
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = "<div class='loader'></div><p>Analyzing...</p>";
 
     const formData = new FormData(this);
 
@@ -104,20 +153,26 @@ document.getElementById("form").addEventListener("submit", async function(e) {
             return;
         }
 
+        const probability = data.probability;
+
         resultDiv.innerHTML = `
             <h2>📊 Result</h2>
-            <p><b>Probability:</b> ${data.probability}%</p>
+
+            <p><b>Probability:</b> ${probability}%</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:${probability}%">
+                    ${probability}%
+                </div>
+            </div>
+
             <p><b>Voice Score:</b> ${data.voice_score}</p>
 
-            <p><b>Strengths:</b></p>
-            <ul>
-                ${data.strengths.map(s => `<li>${s}</li>`).join("")}
-            </ul>
+            <h3>✅ Strengths</h3>
+            ${data.strengths.map(s => `<span class="tag strength">${s}</span>`).join("")}
 
-            <p><b>Weaknesses:</b></p>
-            <ul>
-                ${data.weaknesses.map(w => `<li>${w}</li>`).join("")}
-            </ul>
+            <h3>⚠️ Weaknesses</h3>
+            ${data.weaknesses.map(w => `<span class="tag weakness">${w}</span>`).join("")}
         `;
 
     } catch (error) {
@@ -129,15 +184,6 @@ document.getElementById("form").addEventListener("submit", async function(e) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
 <!-- to start frontend -->
