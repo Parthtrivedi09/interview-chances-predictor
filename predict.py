@@ -84,7 +84,6 @@ def generate_feedback(input_dict):
 
     return strengths, weaknesses, suggestions
 
-
 # LOGISTIC REGRESSION MODEL PARAMETERS IMPORTANCE
 
 #                      Feature  Coefficient

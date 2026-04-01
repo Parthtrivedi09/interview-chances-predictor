@@ -81,6 +81,7 @@ button:hover {
     margin: 5px;
     border-radius: 6px;
     font-size: 14px;
+    background: #2563eb;
 }
 
 .strength {
@@ -121,7 +122,10 @@ button:hover {
     <input type="number" name="projects" placeholder="Projects" required>
     <input type="number" name="aptitude" placeholder="Aptitude Score" required>
     <input type="number" name="extracurricular" placeholder="Extracurricular (0/1)" required>
-    <input type="number" name="Certificates" placeholder="Certificates" required>
+
+    <!-- ✅ FIXED HERE -->
+    <input type="number" name="workshops" placeholder="Workshops" required>
+
     <input type="number" name="placement_training" placeholder="Placement Training (0/1)" required>
 
     <button type="submit">Predict</button>
@@ -169,10 +173,10 @@ document.getElementById("form").addEventListener("submit", async function(e) {
             <p><b>Voice Score:</b> ${data.voice_score}</p>
 
             <h3>✅ Strengths</h3>
-            ${data.strengths.map(s => `<span class="tag strength">${s}</span>`).join("")}
+            ${(data.strengths || []).map(s => `<span class="tag strength">${s}</span>`).join("")}
 
             <h3>⚠️ Weaknesses</h3>
-            ${data.weaknesses.map(w => `<span class="tag weakness">${w}</span>`).join("")}
+            ${(data.weaknesses || []).map(w => `<span class="tag weakness">${w}</span>`).join("")}
 
             <h3>💡 Suggestions</h3>
             ${(data.suggestions || []).map(s => `<span class="tag">${s}</span>`).join("")}
@@ -189,6 +193,7 @@ document.getElementById("form").addEventListener("submit", async function(e) {
 </html>
 
 
-<!-- to start frontend -->
-<!-- python -m http.server 5500 --> 
- <!-- http://localhost:5500/frontend/index.html --> 
+
+<!-- to start frontend --> 
+ <!-- python -m http.server 5500 --> 
+ <!-- http://localhost:5500/frontend/index.html -->
