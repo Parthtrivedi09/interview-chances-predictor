@@ -1,32 +1,23 @@
 import os
-
-# ✅ Ensure ffmpeg is available (for Whisper)
 os.environ["PATH"] += os.pathsep + r"C:\ffmpeg\bin"
 
 import joblib
 import numpy as np
 import pandas as pd
-from voice_pipeline import get_soft_skill_score
 
-
-# Load everything
-data = joblib.load("log_reg.pkl") #load the logistic regression model
-
+# Load model
+data = joblib.load("log_reg.pkl")
 model = data["model"]
 scaler = data["scaler"]
 features = data["features"]
 
 def predict(input_dict):
-    import pandas as pd
-
-    # Ensure correct order (CRITICAL FIX)
     input_df = pd.DataFrame([input_dict])[features]
-
-    # Scale
     input_scaled = scaler.transform(input_df)
 
-    # Predict probability
     prob = model.predict_proba(input_scaled)[0][1]
+
+    print("Predicted probability:", prob)  # ✅ DEBUG
 
     return prob
 
@@ -35,102 +26,47 @@ def generate_feedback(input_dict):
     strengths = []
     weaknesses = []
 
-    # --- CGPA ---
     if input_dict["CGPA"] >= 8.5:
         strengths.append("Strong academic performance")
-    elif input_dict["CGPA"] >= 7.5:
-        strengths.append("Decent academic performance")
     else:
-        weaknesses.append("Low CGPA, needs improvement")
+        weaknesses.append("Low CGPA")
 
-    # --- Internships ---
     if input_dict["Internships"] >= 2:
-        strengths.append("Good industry exposure through internships")
+        strengths.append("Good internships")
     else:
-        weaknesses.append("Lack of internship experience")
+        weaknesses.append("Lack of internships")
 
-    # --- Projects ---
     if input_dict["Projects"] >= 3:
-        strengths.append("Good number of projects")
+        strengths.append("Good projects")
     else:
-        weaknesses.append("Need more hands-on projects")
+        weaknesses.append("Need more projects")
 
-    # --- Aptitude ---
     if input_dict["AptitudeTestScore"] >= 80:
-        strengths.append("Strong aptitude skills")
-    elif input_dict["AptitudeTestScore"] >= 60:
-        strengths.append("Average aptitude skills")
+        strengths.append("Strong aptitude")
     else:
-        weaknesses.append("Weak aptitude skills")
+        weaknesses.append("Weak aptitude")
 
-    # --- Soft Skills ---
-    if input_dict["SoftSkillsRating"] >= 4.0:
-        strengths.append("Good communication and soft skills")
+    if input_dict["SoftSkillsRating"] >= 4:
+        strengths.append("Good communication")
     else:
-        weaknesses.append("Needs improvement in communication skills")
+        weaknesses.append("Improve communication")
 
-    # --- Extracurricular (BINARY) ---
     if input_dict["ExtracurricularActivities"] == 1:
-        strengths.append("Active in extracurricular activities")
+        strengths.append("Extracurricular active")
     else:
-        weaknesses.append("No extracurricular involvement")
+        weaknesses.append("No extracurricular")
 
-    # --- Workshops ---
     if input_dict["Workshops/Certifications"] >= 2:
-        strengths.append("Good certification profile")
+        strengths.append("Good certifications")
     else:
-        weaknesses.append("Few workshops/certifications")
+        weaknesses.append("Few certifications")
 
-    # --- Placement Training (BINARY) ---
     if input_dict["PlacementTraining"] == 1:
-        strengths.append("Has undergone placement training")
+        strengths.append("Placement training done")
     else:
         weaknesses.append("No placement training")
 
     return strengths, weaknesses
-
-
-# ===============================
-# 🎤 AUDIO INPUT (IMPROVED)
-# ===============================
-
-audio_path = r"C:\Users\Parth Trivedi\Desktop\CODING\MachineLearning\interview-chances-predictor\parth_audio_sample.m4a"
-
-# ✅ Check file exists (prevents crash)
-print("Audio exists:", os.path.exists(audio_path))
-if not os.path.exists(audio_path):
-    raise FileNotFoundError("Audio file not found. Check path.")
-
-# ✅ Generate voice score safely (fallback added)
-try:
-    voice_score = get_soft_skill_score(audio_path)
-    print(f"🎤 Voice Score (0–5): {round(voice_score,2)}")
-except Exception as e:
-    print("Voice processing failed:", e)
-    voice_score = 2.5  # fallback neutral score
-
-
-# ===============================
-# 📊 MODEL INPUT
-# ===============================
-
-sample = {
-    "CGPA": 9.4,
-    "Internships": 0,
-    "Projects": 2,
-    "AptitudeTestScore": 85,
-    "SoftSkillsRating": voice_score,
-    "ExtracurricularActivities": 1,
-    "Workshops/Certifications": 0,
-    "PlacementTraining": 1
-}
-
-prob = predict(sample)
-strengths, weaknesses = generate_feedback(sample)
-
-print(f"\nChance: {round(prob*100,2)}%")
-print("Strengths:", strengths)
-print("Weaknesses:", weaknesses)
 
 
 # LOGISTIC REGRESSION MODEL PARAMETERS IMPORTANCE
