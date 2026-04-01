@@ -69,13 +69,14 @@ async def predict_interview(
 
     # Prediction
     prob = predict(sample)
-    strengths, weaknesses = generate_feedback(sample)
+    strengths, weaknesses, suggestions = generate_feedback(sample)
 
     return {
-        "probability": round(prob * 100, 2),
-        "voice_score": voice_score,
-        "strengths": strengths,
-        "weaknesses": weaknesses
+    "probability": round(prob * 100, 2),
+    "voice_score": voice_score,
+    "strengths": strengths,
+    "weaknesses": weaknesses,
+    "suggestions": suggestions
     }
 
 
