@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aptitude Assessment</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🧠 Aptitude Assessment
+        </div>
+
+    </nav>
+
+    <div class="question-box">
+
+        <h3 id="question-number">
+            Question 1 / 10
+        </h3>
+
+        <div class="timer">
+
+            ⏳ Time Left :
+            <span id="timer">
+                30
+            </span>s
+
+        </div>
+
+        <h2 id="question" class="question">
+
+        </h2>
+
+        <div id="options">
+
+        </div>
+
+        <div class="navigation">
+
+            <button onclick="previousQuestion()">
+
+                Previous
+
+            </button>
+
+            <button onclick="nextQuestion()">
+
+                Next
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="js/questions.js"></script>
+
+    <script src="js/aptitude.js"></script>
+
+</body>
+
+</html>
